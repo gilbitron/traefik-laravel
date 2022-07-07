@@ -70,3 +70,7 @@ APP_SERVICE=laravel
 ```
 
 After running `sail up` your site should now be running at [https://laravel.test](https://laravel.test).
+
+## Trusting Certificates
+
+You can add `./certificates/minica.pem` file to your keychain or local trust store to trust the certificates.
