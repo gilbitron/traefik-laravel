@@ -35,7 +35,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
--      - '${APP_PORT:-80}:80'
+-     - '${APP_PORT:-80}:80'
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     environment:
       WWWUSER: '${WWWUSER}'
@@ -46,21 +46,21 @@ services:
       - '.:/var/www/html'
     networks:
       - sail
-+      - web
-+    labels:
-+      - "traefik.enable=true"
-+      - "traefik.http.routers.laravel.rule=Host(`laravel.test`)
-+      - "traefik.http.routers.laravel.tls=true"
-+      - "traefik.http.services.laravel.loadbalancer.server.port=80"
-+      - "traefik.docker.network=web"
++     - web
++   labels:
++     - "traefik.enable=true"
++     - "traefik.http.routers.laravel.rule=Host(`laravel.test`)
++     - "traefik.http.routers.laravel.tls=true"
++     - "traefik.http.services.laravel.loadbalancer.server.port=80"
++     - "traefik.docker.network=web"
 
 # ...
 
 networks:
   sail:
     driver: bridge
-+  web:
-+    external: true
++ web:
++   external: true
 ```
 
 Note, we've had to rename the container to "laravel" as we can't use "laravel.test" in the traefik labels. You should also add the following to your `.env`:
