@@ -49,7 +49,7 @@ services:
 +     - web
 +   labels:
 +     - "traefik.enable=true"
-+     - "traefik.http.routers.laravel.rule=Host(`laravel.test`)
++     - "traefik.http.routers.laravel.rule=Host(`laravel.test`)"
 +     - "traefik.http.routers.laravel.tls=true"
 +     - "traefik.http.services.laravel.loadbalancer.server.port=80"
 +     - "traefik.docker.network=web"
