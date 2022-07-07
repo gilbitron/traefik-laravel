@@ -1,0 +1,54 @@
+version: '3'
+
+networks:
+  web:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.8
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./certificates:/app/certificates
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.test`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+  minica:
+    image: ghcr.io/bjornsnoen/minica-traefik-api:latest
+    restart: unless-stopped
+    networks:
+      - web
+    volumes:
+      - ./certificates:/app/certificates
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOCKER_HOST: "unix:///var/run/docker.sock"
+      DOCKER_LISTEN: "yes"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minica.rule=Host(`minica.test`)"
+      - "traefik.http.routers.minicasecure.rule=Host(`minica.test`)"
+      - "traefik.http.routers.minicasecure.tls=true"
+
+  whoami:
+    image: traefik/whoami
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.test`)"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
