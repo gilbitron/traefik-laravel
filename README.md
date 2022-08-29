@@ -13,7 +13,7 @@ docker network create web
 Then, simply run the docker compose file:
 
 ```
-docker composer up -d
+docker compose up -d
 ```
 
 You should now be able to visit [https://traefik.test](https://traefik.test) and [https://whoami.test](https://whoami.test) to confirm that the proxy is working properly.
